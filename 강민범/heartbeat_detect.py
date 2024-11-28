@@ -20,7 +20,8 @@ try:
     while True:
         # 시리얼 데이터 읽기
         if ser.in_waiting > 0:
-            heart_rate = int(ser.readline().decode('utf-8').strip())
+            heart_rate = ser.readline().decode('utf-8').strip()
+            print(heart_rate)
             heart_rate_history.append(heart_rate)
 
             # 최근 10초 동안의 심박수 기록을 유지

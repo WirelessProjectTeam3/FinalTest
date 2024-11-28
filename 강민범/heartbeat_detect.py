@@ -1,45 +1,69 @@
 import serial
 import time
 
-# 아두이노가 연결된 시리얼 포트 설정
-arduino_port = "COM3"
-baud_rate = 9600
+# 시리얼 포트 설정 (아두이노가 연결된 포트로 변경)
+ser = serial.Serial('COM3', 9600, timeout=1)
+time.sleep(2)  # 시리얼 초기화 대기
 
-# 시리얼 포트 열기
-ser = serial.Serial(arduino_port, baud_rate)
-time.sleep(2)
+# 졸음운전 판단 기준 설정
+LOW_HEART_RATE = 50      # 낮은 심박수 임계값
+CONSISTENT_THRESHOLD = 5  # 변동 폭이 작다고 판단할 심박수 차이
+CHECK_INTERVAL = 10       # 검사 주기 (초)
+WARNING_COUNT = 3         # 연속 경고 발생 횟수 기준
 
-print("연결 시작")
+# 심박수 데이터 저장
+heart_rate_data = []
+warning_counter = 0
 
-# 심박수 기록을 위한 변수
-heart_rate_history = []
-warning_threshold = 10  # 평균 심박수보다 10 bpm 이상 낮을 때 경고
-check_duration = 5  # 5초 동안 낮은 심박수가 유지되면 졸음 경고
+def check_drowsiness(heart_rate_data):
+    global warning_counter
+
+    if len(heart_rate_data) < 2:
+        return False  # 데이터가 충분하지 않으면 판단하지 않음
+
+    # 평균 심박수 계산
+    avg_heart_rate = sum(heart_rate_data) / len(heart_rate_data)
+
+    # 심박수가 임계값 이하인지 확인
+    if avg_heart_rate < LOW_HEART_RATE:
+        warning_counter += 1
+        print(f"경고: 심박수 낮음! 평균 심박수: {avg_heart_rate:.2f}")
+    else:
+        warning_counter = 0
+
+    # 변동 폭이 작아 일정한 상태인지 확인
+    max_hr = max(heart_rate_data)
+    min_hr = min(heart_rate_data)
+    if max_hr - min_hr < CONSISTENT_THRESHOLD:
+        warning_counter += 1
+        print("경고: 심박수 변동 없음!")
+
+    # 연속 경고 발생 시 졸음 판단
+    if warning_counter >= WARNING_COUNT:
+        print("졸음운전 감지! 알림을 전송합니다.")
+        warning_counter = 0
+        return True
+
+    return False
 
 try:
     while True:
-        # 시리얼 데이터 읽기
-        if ser.in_waiting > 0:
-            heart_rate = ser.readline().decode('utf-8').strip()
-            print(heart_rate)
-            heart_rate_history.append(heart_rate)
+        # 심박수 데이터 읽기
+        data = ser.readline().decode('utf-8').strip()
+        try:
+            heart_rate = int(data)
+            print(f"현재 심박수: {heart_rate}")
+            heart_rate_data.append(heart_rate)
 
-            # 최근 10초 동안의 심박수 기록을 유지
-            if len(heart_rate_history) > 10:
-                heart_rate_history.pop(0)
-
-            # 평균 심박수 계산
-            avg_heart_rate = sum(heart_rate_history) / len(heart_rate_history)
-
-            print(f"심장 박동 수: {heart_rate} bpm, 평균: {avg_heart_rate:.2f} bpm")
-
-            # 졸음 상태 감지
-            if heart_rate < (avg_heart_rate - warning_threshold):
-                print("졸음 경고: 심박수가 평균보다 낮습니다!")
-
-        time.sleep(1)
-
+            # 일정 시간마다 검사
+            if len(heart_rate_data) >= CHECK_INTERVAL:
+                drowsy = check_drowsiness(heart_rate_data)
+                if drowsy:
+                    print("경고: 졸음운전 상태!")
+                heart_rate_data = []  # 데이터 초기화
+        except ValueError:
+            print("유효하지 않은 데이터:", data)
 except KeyboardInterrupt:
-    print("연결 중단")
+    print("프로그램 종료")
 finally:
     ser.close()

@@ -64,5 +64,7 @@ TELEGRAM_CHAT_ID = '텔레그램 챗 아이디'
 
 ## 참조
 [https://github.com/coolsms/coolsms-python](https://github.com/coolsms/coolsms-python)
+
 [https://docs.coolsms.co.kr/api-reference/messages/sendsimplemessage#body-params](https://docs.coolsms.co.kr/api-reference/messages/sendsimplemessage#body-params)
+
 [https://core.telegram.org/bots/api](https://core.telegram.org/bots/api)

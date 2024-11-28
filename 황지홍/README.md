@@ -53,11 +53,16 @@ TELEGRAM_CHAT_ID = '텔레그램 챗 아이디'
 
 ## 사용 예시
 
-# SMS 기능
+### SMS 기능
 <img src="https://github.com/user-attachments/assets/28437a46-55fa-4ad2-b821-dc4b0ab82aea"  width="300" height="500"/>
 <img src="https://github.com/user-attachments/assets/cb7627d9-bd9b-4e29-9646-fdd9fa175ac7"  width="300" height="500"/>
 
-# 텔레그램 봇
+### 텔레그램 봇
 <img src="https://github.com/user-attachments/assets/83305753-997b-49d0-bbf4-81ebb40b486b"  width="300" height="500"/>
 <img src="https://github.com/user-attachments/assets/e2bc22e4-f18a-4aae-8d12-e798c1969259"  width="300" height="500"/>
 <img src="https://github.com/user-attachments/assets/5d5b3e0a-b129-4d87-b15d-c31fd250d1e7"  width="300" height="500"/>
+
+## 참조
+[https://github.com/coolsms/coolsms-python](https://github.com/coolsms/coolsms-python)
+[https://docs.coolsms.co.kr/api-reference/messages/sendsimplemessage#body-params](https://docs.coolsms.co.kr/api-reference/messages/sendsimplemessage#body-params)
+[https://core.telegram.org/bots/api](https://core.telegram.org/bots/api)

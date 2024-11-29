@@ -1,4 +1,3 @@
-# 필요한 라이브러리 import
 import cv2  # OpenCV: 컴퓨터 비전 라이브러리
 import dlib  # 얼굴 검출 및 랜드마크 추출용 라이브러리
 import imutils  # 이미지 처리 유틸리티 라이브러리
@@ -21,7 +20,8 @@ def eye_aspect_ratio(eye):
 FACIAL_LANDMARK_PREDICTOR = "shape_predictor_68_face_landmarks.dat"  # 랜드마크 모델 파일 경로
 MINIMUM_EAR = 0.2  # EAR 임계값 (0.2 이하면 졸음으로 간주)
 MAXIMUM_FRAME_COUNT = 10  # EAR이 지속되는 최대 프레임 수
-HEAD_DIRECTION_THRESHOLD = 0.3  # 정면 시선 방향 임계값
+MINIMUM_HEAD_POSITION_Y = 30  # 머리 위치가 낮아졌다고 판단하는 픽셀 값 차이
+HEAD_POSITION_CHECK_FRAMES = 10  # 머리 위치를 평가할 프레임 수
 
 # dlib 객체 초기화
 faceDetector = dlib.get_frontal_face_detector()  # dlib 얼굴 검출기
@@ -35,17 +35,9 @@ webcamFeed = cv2.VideoCapture(0)  # 기본 웹캠 사용
 (rightEyeStart, rightEyeEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]  # 오른쪽 눈
 (noseStart, noseEnd) = face_utils.FACIAL_LANDMARKS_IDXS["nose"]  # 코
 
-# 졸음 감지 카운터 초기화
+# 졸음 감지 카운터 및 머리 위치 초기화
 EYE_CLOSED_COUNTER = 0
-
-# 밝기와 대비 조정 함수 정의
-def adjust_brightness_contrast(image, alpha=1.5, beta=30):
-    """
-    이미지의 밝기와 대비를 조정하는 함수.
-    alpha: 대비 조정 값
-    beta: 밝기 조정 값
-    """
-    return cv2.convertScaleAbs(image, alpha=alpha, beta=beta)
+head_position_y_values = []  # 머리 높이를 저장할 리스트
 
 try:
     while True:  # 무한 루프를 통해 실시간 처리
@@ -59,12 +51,6 @@ try:
         # 이미지 회색조 변환
         grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-        # 히스토그램 균등화로 밝기 보정
-        grayImage = cv2.equalizeHist(grayImage)
-
-        # 밝기와 대비 조정
-        grayImage = adjust_brightness_contrast(grayImage)
-
         # 얼굴 검출
         faces = faceDetector(grayImage, 0)
 
@@ -73,10 +59,9 @@ try:
             faceLandmarks = landmarkFinder(grayImage, face)
             faceLandmarks = face_utils.shape_to_np(faceLandmarks)
 
-            # 왼쪽, 오른쪽 눈 및 코의 좌표 가져오기
+            # 왼쪽, 오른쪽 눈 좌표 가져오기
             leftEye = faceLandmarks[leftEyeStart:leftEyeEnd]
             rightEye = faceLandmarks[rightEyeStart:rightEyeEnd]
-            nose = faceLandmarks[noseStart:noseEnd]
 
             # EAR 계산
             leftEAR = eye_aspect_ratio(leftEye)
@@ -89,12 +74,18 @@ try:
             cv2.drawContours(image, [leftEyeHull], -1, (0, 255, 0), 1)
             cv2.drawContours(image, [rightEyeHull], -1, (0, 255, 0), 1)
 
-            # 시선 방향 계산
-            nose_center = nose[3]  # 코 중심점
-            eye_center = (leftEye[0] + rightEye[3]) / 2  # 양쪽 눈 중간점
-            direction = abs(nose_center[0] - eye_center[0])  # 시선 방향 편차
-            if direction > HEAD_DIRECTION_THRESHOLD:  # 정면 주시 여부 확인
-                cv2.putText(image, "Look Forward!", (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+            # 머리 중심 위치 계산 (얼굴의 중앙 Y값 사용)
+            head_position_y = (face.top() + face.bottom()) // 2
+            head_position_y_values.append(head_position_y)
+
+            # 최근 프레임에서 머리 위치 변화 분석
+            if len(head_position_y_values) > HEAD_POSITION_CHECK_FRAMES:
+                head_position_y_values.pop(0)
+                avg_head_position_y = sum(head_position_y_values) / len(head_position_y_values)
+                head_position_delta = abs(head_position_y - avg_head_position_y)
+
+                if head_position_delta > MINIMUM_HEAD_POSITION_Y:  # 머리가 낮아졌는지 체크
+                    cv2.putText(image, "Warning! Head Drooping!", (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
             # EAR 임계값 체크
             if ear < MINIMUM_EAR:
@@ -107,7 +98,7 @@ try:
 
             # 졸음 경고
             if EYE_CLOSED_COUNTER >= MAXIMUM_FRAME_COUNT:  # 눈 감은 상태가 일정 시간 이상 지속되면
-                cv2.putText(image, "Warning!", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+                cv2.putText(image, "Warning! Eyes Closed!", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
         # 최종 프레임 화면에 출력
         cv2.imshow("Frame", image)

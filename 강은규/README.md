@@ -1,4 +1,3 @@
-![image](https://github.com/user-attachments/assets/96defe3b-16a3-4afa-ade2-af1978147f37)
 ## 각각의 코드 분석
 ### co2_detect.py
 

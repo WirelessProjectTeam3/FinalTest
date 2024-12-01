@@ -373,5 +373,6 @@ if __name__ == "__main__":
 
 
 - 실행 화면(SMS전송)
+
 ![image](https://github.com/user-attachments/assets/84d5e82d-818c-4a11-9491-a4c8a26132e2)
 

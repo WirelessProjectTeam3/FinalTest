@@ -1,4 +1,4 @@
-
+![image](https://github.com/user-attachments/assets/96defe3b-16a3-4afa-ade2-af1978147f37)
 ## 각각의 코드 분석
 ### co2_detect.py
 
@@ -369,8 +369,9 @@ if __name__ == "__main__":
 
 - 실행 화면(텔레그램)
 
-![[Pasted image 20241201202506.png]]
+![image](https://github.com/user-attachments/assets/f6bceefe-b991-4e48-8e0c-2eb1c240ac58)
+
 
 - 실행 화면(SMS전송)
+![image](https://github.com/user-attachments/assets/84d5e82d-818c-4a11-9491-a4c8a26132e2)
 
-![[Pasted image 20241201202558.png]]

@@ -366,3 +366,11 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+
+- 실행 화면(텔레그램)
+
+![[Pasted image 20241201202506.png]]
+
+- 실행 화면(SMS전송)
+
+![[Pasted image 20241201202558.png]]

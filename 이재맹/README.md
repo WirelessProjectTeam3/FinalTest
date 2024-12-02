@@ -114,3 +114,6 @@
 4. **시스템 작동 확인**
    - CO₂ 농도가 실시간으로 출력됩니다.
    - 임계값 초과 시 음성 경고 메시지가 출력됩니다.
+  
+## 테스트 영상
+[![Project Overview](https://vimeo.com/1035372687/bd0df5ef71?ts=0&share=copy)]

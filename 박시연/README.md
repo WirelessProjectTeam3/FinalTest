@@ -80,12 +80,13 @@ shape_predictor_68_face_landmarks.dat 파일을 다운로드해야 합니다. �
 다운로드 링크: https://osdn.net/projects/sfnet_dclib/downloads/dlib/v18.10/shape_predictor_68_face_landmarks.dat.bz2/
 
 ```bash
-pip install numpy opencv-python dlib imutils scipy pyttsx3
-pip install cmake
+pip install numpy
+pip install opencv-python
 pip install dlib
-pip install scipy
 pip install imutils
-
+pip install scipy
+pip install pyttsx3
+pip install cmake
 ```
 ## 실행 결과 이미지
 초기 실행 이미지. 10초동안 EAR값을 누적하여 평균을 계산합니다.

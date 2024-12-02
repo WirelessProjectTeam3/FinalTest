@@ -15,6 +15,9 @@
 
 ## 코드 설명
 - **졸음운전 판단 기준 코드**
+- ![수면 심박수1](https://github.com/user-attachments/assets/8eae8f40-53ff-4db3-8938-d2eef66b2dc9)
+![수면 심박수2](https://github.com/user-attachments/assets/d4ed400f-d058-4ae6-b054-6b12e9a42ad6)
+
   - LOW_HEART_RATE : 수면 중 심박수를 측정한 결과 50~60bpm이 가장 많이 측정되어 그 중간 값으로 설정
   - CONSISTENT_THRESHOLD : 졸음 시 심박수의 변동 폭이 작기 때문에 측정 결과를 토대로 적절한 값 입력 
   - CHECK_INTERVAL : 경고를 너무 자주 발생시키면 운전자가 경고에 익숙해져 무시할 가능성이 있기 때문에 10초 간격으로 설정
@@ -82,3 +85,4 @@
 ## 심박수 센서가 비정상적으로 높게 측정이 되는 문제
 - 심박수가 비정상적으로 측정이 되니 센서 기계의 문제가 아닐까 생각
   - 총 4개의 심박수 센서를 갖고 있었고 4개 모두 측정해본 결과 모두 동일하게 비정상적으로 높은 심박수가 측정이 되었음.
+    ![아두이노 심박수](https://github.com/user-attachments/assets/cc1b32b9-c146-4121-b46f-4c8438ba4e70)

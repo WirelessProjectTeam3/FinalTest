@@ -69,8 +69,8 @@
 ### 데이터 수신 및 경고
 - 구현: am.read() 함수를 사용하여 데이터 수신이 이루어집니다. 수신된 데이터는 OscilloscopeMsg 형태로 변환되어 CO₂ 농도를 분석합니다. CO₂ 농도가 설정된 임계값을 초과하면, engine.say() 함수를 사용하여 경고 메시지를 음성으로 출력합니다. 음성 출력은 engine.runAndWait()를 통해 실행됩니다.
 - `CO2_THRESHOLD`: 이 변수는 CO₂ 농도에 대한 임계값을 ppm 단위로 설정합니다. 기본값은 1000 ppm입니다. 환경에 따라 이 값을 조정하여 더 민감하거나 덜 민감한 경고를 설정할 수 있습니다.
-      ```python
-      try:
+    ```python
+     try:
     print("데이터 수신을 시작합니다...")
     while True:
         p = am.read()  # 패킷 읽기
@@ -88,6 +88,7 @@ except KeyboardInterrupt:
     print("프로그램이 종료되었습니다.")
 except Exception as e:
     print(f"오류 발생: {e}")
+
 
 
 

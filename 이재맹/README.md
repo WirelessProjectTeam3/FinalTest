@@ -84,10 +84,10 @@
                     print("경고: CO₂ 농도가 임계값을 초과했습니다! 즉시 환기가 필요합니다!")
                     engine.say("이산화탄소 농도가 높습니다. 즉시 환기가 필요합니다.")
                     engine.runAndWait()
-except KeyboardInterrupt:
-    print("프로그램이 종료되었습니다.")
-except Exception as e:
-    print(f"오류 발생: {e}")
+    except KeyboardInterrupt:
+        print("프로그램이 종료되었습니다.")
+    except Exception as e:
+        print(f"오류 발생: {e}")
 
 
 

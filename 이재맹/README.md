@@ -71,23 +71,24 @@
   -`CO2_THRESHOLD`: 이 변수는 CO₂ 농도에 대한 임계값을 ppm 단위로 설정합니다. 기본값은 1000 ppm입니다. 환경에 따라 이 값을 조정하여 더 민감하거나 덜 민감한 경고를 설정할 수 있습니다.
       ```python
       try:
-        print("데이터 수신을 시작합니다...")
-        while True:
-            p = am.read()  # 패킷 읽기
-            if p:
-                msg = OscilloscopeMsg(p.data)
-                if msg.type == 1:  # CO2 데이터 타입 확인
-                    CO2 = msg.Data0
-                    CO2 = 1.5 * CO2 / 4096 * 2 * 1000  # 데이터 변환 (ppm 기준)
-                    print(f"{datetime.datetime.now()} - CO2: {CO2:.2f} ppm")
-                    if CO2 > CO2_THRESHOLD:
-                        print("경고: CO₂ 농도가 임계값을 초과했습니다! 즉시 환기가 필요합니다!")
-                        engine.say("이산화탄소 농도가 높습니다. 즉시 환기가 필요합니다.")
-                        engine.runAndWait()
-    except KeyboardInterrupt:
-        print("프로그램이 종료되었습니다.")
-    except Exception as e:
-        print(f"오류 발생: {e}")
+    print("데이터 수신을 시작합니다...")
+    while True:
+        p = am.read()  # 패킷 읽기
+        if p:
+            msg = OscilloscopeMsg(p.data)
+            if msg.type == 1:  # CO2 데이터 타입 확인
+                CO2 = msg.Data0
+                CO2 = 1.5 * CO2 / 4096 * 2 * 1000  # 데이터 변환 (ppm 기준)
+                print(f"{datetime.datetime.now()} - CO2: {CO2:.2f} ppm")
+                if CO2 > CO2_THRESHOLD:
+                    print("경고: CO₂ 농도가 임계값을 초과했습니다! 즉시 환기가 필요합니다!")
+                    engine.say("이산화탄소 농도가 높습니다. 즉시 환기가 필요합니다.")
+                    engine.runAndWait()
+except KeyboardInterrupt:
+    print("프로그램이 종료되었습니다.")
+except Exception as e:
+    print(f"오류 발생: {e}")
+
 
 
 ## 🚀 실행 방법

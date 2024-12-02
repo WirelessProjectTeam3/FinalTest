@@ -84,7 +84,8 @@
 ## 🚀 실행 방법
 
 1. **Raspberry Pi 설정**
-   - 필요한 라이브러리를 설치합니다:
+   - 필요한 라이브러리를 설치합니다: 
+   - TinyOS 설치 가이드를 참고하세요.([TinyOS Official Website](http://tinyos.stanford.edu/tinyos-wiki/index.php/TinyOS_Documentation_Wiki))
      ```bash
      pip install pyttsx3
      ```

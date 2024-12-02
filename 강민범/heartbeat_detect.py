@@ -6,7 +6,7 @@ ser = serial.Serial('COM3', 9600, timeout=1)
 time.sleep(2)  # 시리얼 초기화 대기
 
 # 졸음운전 판단 기준 설정
-LOW_HEART_RATE = 50      # 낮은 심박수 임계값
+LOW_HEART_RATE = 55      # 낮은 심박수 임계값
 CONSISTENT_THRESHOLD = 5  # 변동 폭이 작다고 판단할 심박수 차이
 CHECK_INTERVAL = 10       # 검사 주기 (초)
 WARNING_COUNT = 3         # 연속 경고 발생 횟수 기준

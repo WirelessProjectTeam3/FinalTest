@@ -1,3 +1,4 @@
+
 # CO₂ 농도 측정 및 경고 시스템
 
 이 프로젝트는 차량 내부의 CO₂ 농도를 실시간으로 모니터링하여 졸음 운전 위험성을 줄이고, 실내 공기질을 개선하기 위해 설계되었습니다. Zigbee 통신을 활용해 센서 데이터를 안정적으로 수집하며, Raspberry Pi를 통해 데이터를 처리하고 음성 경고를 제공합니다.
@@ -61,6 +62,60 @@
   - 이 모듈을 초기화하고, 음성 속도 및 언어 설정을 한국어로 조정하여 경고 메시지를 명확하게 전달합니다.
       ```python
          import pyttsx3
-         engine = pyttsx3상](https://example.com/path/to/thumbnail.jpg)](https://photos.onedrive.com/share/0D986CDA029689A1!sabebe9e726e640689f1b8fedf1a4e9f8?cid=0D986CDA029689A1&resId=0D986CDA029689A1!sabebe9e726e640689f1b8fedf1a4e9f8&ithint=video&e=4%3aQNL5Go&sharingv2=true&fromShare=true&at=9&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL3YvYy8wZDk4NmNkYTAyOTY4OWExL0VlZnA2NnZtSm1oQW54dVA3ZkdrNmZnQmV1Q0ZvWDJIRzc4TXUzdjVTbHYzTVE_ZT00OlFOTDVHbyZzaGFyaW5ndjI9dHJ1ZSZmcm9tU2hhcmU9dHJ1ZSZhdD05 "Video Title on OneDrive")
+         engine = pyttsx3.init()
+         engine.setProperty('rate', 200)        #음성 메시지의 속도를 설정합니다.(기본 속도 200)
+         engine.setProperty('voice', 'korean')  #출력될 음성 메시지의 언어를 한국어로 설정합니다.
+  
 
+### 데이터 수신 및 경고
+- 구현: am.read() 함수를 사용하여 데이터 수신이 이루어집니다. 수신된 데이터는 OscilloscopeMsg 형태로 변환되어 CO₂ 농도를 분석합니다. CO₂ 농도가 설정된 임계값을 초과하면, engine.say() 함수를 사용하여 경고 메시지를 음성으로 출력합니다. 음성 출력은 engine.runAndWait()를 통해 실행됩니다.
+- `CO2_THRESHOLD`: 이 변수는 CO₂ 농도에 대한 임계값을 ppm 단위로 설정합니다. 기본값은 1000 ppm입니다. 환경에 따라 이 값을 조정하여 더 민감하거나 덜 민감한 경고를 설정할 수 있습니다.
+    ```python
+     try:
+    print("데이터 수신을 시작합니다...")
+    while True:
+        p = am.read()  # 패킷 읽기
+        if p:
+            msg = OscilloscopeMsg(p.data)
+            if msg.type == 1:  # CO2 데이터 타입 확인
+                CO2 = msg.Data0
+                CO2 = 1.5 * CO2 / 4096 * 2 * 1000  # 데이터 변환 (ppm 기준)
+                print(f"{datetime.datetime.now()} - CO2: {CO2:.2f} ppm")
+                if CO2 > CO2_THRESHOLD:
+                    print("경고: CO₂ 농도가 임계값을 초과했습니다! 즉시 환기가 필요합니다!")
+                    engine.say("이산화탄소 농도가 높습니다. 즉시 환기가 필요합니다.")
+                    engine.runAndWait()
+    except KeyboardInterrupt:
+        print("프로그램이 종료되었습니다.")
+    except Exception as e:
+        print(f"오류 발생: {e}")
+
+
+
+
+## 🚀 실행 방법
+
+1. **Raspberry Pi 설정**
+   - 필요한 라이브러리를 설치합니다: 
+   - TinyOS 설치 가이드를 참고하세요.([TinyOS Official Website](http://tinyos.stanford.edu/tinyos-wiki/index.php/TinyOS_Documentation_Wiki))
+     ```bash
+     pip install pyttsx3
+     ```
+
+2. **장비 연결**
+   - CO₂ 센서를 Zigbee 모듈과 연결합니다.
+   - Zigbee 모듈을 Raspberry Pi의 USB 포트에 연결합니다.
+
+3. **코드 실행**
+   - 아래 명령어를 실행합니다:
+     ```bash
+     python co2_detect.py serial@/dev/ttyUSB0:115200
+     ```
+
+4. **시스템 작동 확인**
+   - CO₂ 농도가 실시간으로 출력됩니다.
+   - 임계값 초과 시 음성 경고 메시지가 출력됩니다.
+  
+## 테스트 영상
+[![Video Title](https://example.com/path/to/thumbnail.jpg)](https://photos.onedrive.com/share/0D986CDA029689A1!sabebe9e726e640689f1b8fedf1a4e9f8?cid=0D986CDA029689A1&resId=0D986CDA029689A1!sabebe9e726e640689f1b8fedf1a4e9f8&ithint=video&e=4%3aQNL5Go&sharingv2=true&fromShare=true&at=9&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL3YvYy8wZDk4NmNkYTAyOTY4OWExL0VlZnA2NnZtSm1oQW54dVA3ZkdrNmZnQmV1Q0ZvWDJIRzc4TXUzdjVTbHYzTVE_ZT00OlFOTDVHbyZzaGFyaW5ndjI9dHJ1ZSZmcm9tU2hhcmU9dHJ1ZSZhdD05 "Video Title on OneDrive")
 

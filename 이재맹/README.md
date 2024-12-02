@@ -28,7 +28,7 @@ import tos
 am = tos.AM()
 
 
-### 데이터 패킷 처리 (OscilloscopeMsg 클래스)
+** 데이터 패킷 처리 (OscilloscopeMsg 클래스) ** 
 - 수신된 데이터를 구조화하고, 각 센서 데이터 포인트를 적절히 파싱하여 CO₂ 농도를 계산합니다.
 - OscilloscopeMsg 클래스는 TinyOS 패킷 구조를 정의하며, 센서 데이터를 다루는 필드를 포함합니다. 이 클래스를 통해 센서 데이터의 CO₂ 농도를 추출하고, 필요한 경우 경고 로직을 실행합니다.
 

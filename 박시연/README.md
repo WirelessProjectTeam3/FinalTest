@@ -54,7 +54,8 @@
 - **EAR 계산** </br></br>
 ![img_3](https://github.com/user-attachments/assets/9c587d74-5353-4aed-8b36-61a60d0b8a1c)</br>
 EAR(Eye Aspect Ratio)는 눈 개폐 정도를 나타내며, 수직 거리와 수평 거리 비율로 계산됩니다.
-EAR 값이 낮아지면 눈이 감긴 것으로 간주합니다.
+EAR 값이 낮아지면 눈이 감긴 것으로 간주합니다.</br>
+
 ![img](https://github.com/user-attachments/assets/26b7c447-9d15-49bb-a5e2-5da9da534131)
 
 

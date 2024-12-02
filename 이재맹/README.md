@@ -27,32 +27,38 @@
   import pyttsx3
   from datetime import datetime
 
+- **TinyOS와의 통신 (tos 모듈)**
+    - TinyOS는 센서 네트워크를 위한 운영 체제로, 본 프로젝트에서는 Raspberry Pi와 CO₂ 센서 간의 데이터 통신을 관리합니다.
+    - tos 모듈을 통해 Zigbee 프로토콜을 사용하여 Raspberry Pi와 센서 간에 데이터를 안전하고 신뢰성 있게 전송합니다. 이 모듈은 센서에서 수집된 데이터 패킷을 Raspberry Pi로 전송하는 데 필수적입니다.
+    ```python
+      import tos
+      am = tos.AM()
+
 - **CO₂ 임계값 설정**
   -`CO2_THRESHOLD`: 이 변수는 CO₂ 농도에 대한 임계값을 ppm 단위로 설정합니다. 기본값은 1000 ppm입니다. 환경에 따라 이 값을 조정하여 더 민감하거나 덜 민감한 경고를 설정할 수 있습니다.
   ```python
   CO2_THRESHOLD = 1000
   
-- **음성 엔진 설정**
-  - `engine`: `pyttsx3` 라이브러리를 사용하여 초기화된 음성 엔진입니다. 음성 메시지의 속도와 언어를 설정할 수 있습니다.
-    - `setProperty('rate', 200)`: 음성 메시지의 속도를 설정합니다.
-    - `setProperty('voice', 'Korean')`: 출력될 음성 메시지의 언어를 한국어로 설정합니다.
-    ```python
-    engine = pyttsx3.init()
-    engine.setProperty('rate', 200)  # 말하는 속도
-    engine.setProperty('voice', 'korean')  # 음성 언어 설정
+- **음성 출력 (pyttsx3 모듈)**
+  - pyttsx3는 Python에서 작동하는 텍스트-투-스피치 변환 라이브러리로, CO₂ 농도가 임계값을 초과할 때 사용자에게 즉각적인 음성 경고를 제공합니다.
+  - 이 모듈을 초기화하고, 음성 속도 및 언어 설정을 한국어로 조정하여 경고 메시지를 명확하게 전달합니다.
+  ```python
+     import pyttsx3
+     engine = pyttsx3.init()
+     engine.setProperty('rate', 200)        #음성 메시지의 속도를 설정합니다.(기본 속도 200)
+     engine.setProperty('voice', 'korean')  #출력될 음성 메시지의 언어를 한국어로 설정합니다.
     
-- **데이터 패킷 처리**
-  - `OscilloscopeMsg`: 이 클래스는 수신된 데이터 패킷의 구조를 정의합니다. 각 필드는 센서 데이터의 다양한 측정값을 나타냅니다.
-    - 패킷 데이터를 분석하여 CO₂ 농도 데이터를 추출하고, 필요에 따라 경고를 발생시키는 로직을 포함합니다.
+- **데이터 패킷 처리 (OscilloscopeMsg 클래스)**
+  - 수신된 데이터를 구조화하고, 각 센서 데이터 포인트를 적절히 파싱하여 CO₂ 농도를 계산합니다.
+  - OscilloscopeMsg 클래스는 TinyOS 패킷 구조를 정의하며, 센서 데이터를 다루는 필드를 포함합니다. 이 클래스를 통해 센서 데이터의 CO₂ 농도를 추출하고, 필요한 경우 경고 로직을 실행합니다.
   ```python
   class OscilloscopeMsg(tos.Packet):
     def __init__(self, packet=None):
-        # 각 필드는 센서 데이터의 다양한 측정값을 나타냅니다
         tos.Packet.__init__(self,
                             [('srcID', 'int', 2),
                              ('seqNo', 'int', 4),
                              ('type', 'int', 2),
-                             ('Data0', 'int', 2)],  # 주요 CO₂ 데이터 필드
+                             ('Data0', 'int', 2)],  # CO₂ 데이터
                             packet)
 
 - **데이터 수신 및 경고**

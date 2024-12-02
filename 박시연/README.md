@@ -52,21 +52,21 @@
 
 ## 🔑 핵심 코드 설명
 - **EAR 계산** </br></br>
-![img_3.png](img_3.png)</br>
+![img_3](https://github.com/user-attachments/assets/9c587d74-5353-4aed-8b36-61a60d0b8a1c)</br>
 EAR(Eye Aspect Ratio)는 눈 개폐 정도를 나타내며, 수직 거리와 수평 거리 비율로 계산됩니다.
 EAR 값이 낮아지면 눈이 감긴 것으로 간주합니다.
-![img.png](img.png)
+![img](https://github.com/user-attachments/assets/26b7c447-9d15-49bb-a5e2-5da9da534131)
 
 
 - **동적 임계값 설정**</br></br>
 초기 프레임 동안 EAR 값을 누적하여 평균을 계산합니다.
 평균 EAR 값의 80%를 임계값으로 설정하여, 개인화된 EAR 기준을 적용합니다.
-![img_1.png](img_1.png)
+![img_1](https://github.com/user-attachments/assets/d5eb7605-41bf-4894-83a3-9eb864615d14))
 
 - **졸음 감지**</br></br>
 EAR 값이 동적으로 설정된 임계값보다 작아지고 그 값이 연속적으로 일정 프레임 이상 지속되면 졸음운전으로 간주, 
 음성 및 시각적 경고를 출력합니다.
-![img_2.png](img_2.png)
+![img_2](https://github.com/user-attachments/assets/15dbd84d-6afa-42f2-b972-510ee80f47ea)
 
 ## 📍 실행 방법
 
@@ -89,9 +89,9 @@ pip install cmake
 ```
 ## 실행 결과 이미지
 초기 실행 이미지. 10초동안 EAR값을 누적하여 평균을 계산합니다.
-![open_eye.png](open_eye.png)<br>
+![open_eye](https://github.com/user-attachments/assets/715bab62-2cf2-4e98-bb45-5bcabc2ce67c)<br>
 EAR 값이 연속적으로 일정 프레임 이상 지속되면 음성 및 시각적 경고를 출력합니다.
-![sleep_detect.png](sleep_detect.png)
+![sleep_detect](https://github.com/user-attachments/assets/75a4d791-f05d-4675-9e11-b211598b13b5)
 ## 실행 결과 GIF
 ![시연GIF.gif](%EC%8B%9C%EC%97%B0GIF.gif)
  

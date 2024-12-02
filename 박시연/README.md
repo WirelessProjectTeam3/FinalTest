@@ -5,6 +5,12 @@
 
 ---
 
+
+  
+ 
+ 
+
+
 ## 🎯 주요 기능
 
 ### **1. EAR 기반 졸음운전 감지**
@@ -27,7 +33,7 @@
 ## 💡 핵심 기술
 
 ### **🌟 EAR 알고리즘**
-![img_3.png](img_3.png)
+
 - 눈의 위아래 거리와 좌우 거리를 기반으로 눈 개폐 정도를 계산.
 - EAR 값이 낮으면 눈을 감은 상태로 판단.
 
@@ -47,6 +53,7 @@
 
 ## 🔑 핵심 코드 설명
 - **EAR 계산** </br></br>
+![img_3.png](img_3.png)</br>
 EAR(Eye Aspect Ratio)는 눈 개폐 정도를 나타내며, 수직 거리와 수평 거리 비율로 계산됩니다.
 EAR 값이 낮아지면 눈이 감긴 것으로 간주합니다.
 ![img.png](img.png)
@@ -58,10 +65,9 @@ EAR 값이 낮아지면 눈이 감긴 것으로 간주합니다.
 ![img_1.png](img_1.png)
 
 - **졸음 감지**</br></br>
-EAR 값이 동적으로 설정된 임계값보다 작아지면 졸음운전으로 감지합니다.
-EAR 값이 연속적으로 일정 프레임 이상 지속되면 음성 및 시각적 경고를 출력합니다.
+EAR 값이 동적으로 설정된 임계값보다 작아지고 그 값이 연속적으로 일정 프레임 이상 지속되면 졸음운전으로 간주, 
+음성 및 시각적 경고를 출력합니다.
 ![img_2.png](img_2.png)
-
 
 ## 📍 실행 방법
 
@@ -77,4 +83,17 @@ shape_predictor_68_face_landmarks.dat 파일을 다운로드해야 합니다. �
 pip install numpy opencv-python dlib imutils scipy pyttsx3
 pip install cmake
 pip install dlib
+pip install scipy
+pip install imutils
+
+```
+## 실행 결과 이미지
+초기 실행 이미지. 10초동안 EAR값을 누적하여 평균을 계산합니다.
+![open_eye.png](open_eye.png)<br>
+EAR 값이 연속적으로 일정 프레임 이상 지속되면 음성 및 시각적 경고를 출력합니다.
+![sleep_detect.png](sleep_detect.png)
+## 실행 결과 GIF
+![시연GIF.gif](%EC%8B%9C%EC%97%B0GIF.gif)
+ 
+
 

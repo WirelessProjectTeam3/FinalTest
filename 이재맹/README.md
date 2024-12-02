@@ -23,10 +23,10 @@
   - `tos`: TinyOS와의 통신을 위한 모듈로, Zigbee 프로토콜을 사용하여 Raspberry Pi와 센서 간의 데이터를 교환합니다.
   - `pyttsx3`: Python에서 음성 합성을 가능하게 하는 라이브러리로, CO₂ 농도가 임계값을 초과할 때 경고 메시지를 음성으로 출력하는 데 사용됩니다.
   - 
-```python
-import tos
-import pyttsx3
-from datetime import datetime
+  ```python
+  import tos
+  import pyttsx3
+  from datetime import datetime
 
 - **CO₂ 임계값 설정 (`CO2_THRESHOLD`)**: 이 변수는 CO₂ 농도에 대한 임계값을 ppm 단위로 설정합니다. 기본값은 1000 ppm입니다. 환경에 따라 이 값을 조정하여 더 민감하거나 덜 민감한 경고를 설정할 수 있습니다.
 

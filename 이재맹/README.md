@@ -23,29 +23,29 @@
 -  TinyOS는 센서 네트워크를 위한 운영 체제로, 본 프로젝트에서는 Raspberry Pi와 CO₂ 센서 간의 데이터 통신을 관리합니다.
 -  `tos` 모듈을 통해 Zigbee 프로토콜을 사용하여 Raspberry Pi와 센서 간에 데이터를 안전하고 신뢰성 있게 전송합니다. 이 모듈은 센서에서 수집된 데이터 패킷을 Raspberry Pi로 전송하는 데 필수적입니다.
 
-```python
-import tos
-am = tos.AM()
+    ```python
+    import tos
+    am = tos.AM()
 
 
-** 데이터 패킷 처리 (OscilloscopeMsg 클래스) ** 
+### 데이터 패킷 처리 (OscilloscopeMsg 클래스) 
 - 수신된 데이터를 구조화하고, 각 센서 데이터 포인트를 적절히 파싱하여 CO₂ 농도를 계산합니다.
 - OscilloscopeMsg 클래스는 TinyOS 패킷 구조를 정의하며, 센서 데이터를 다루는 필드를 포함합니다. 이 클래스를 통해 센서 데이터의 CO₂ 농도를 추출하고, 필요한 경우 경고 로직을 실행합니다.
 
-```python
-class OscilloscopeMsg(tos.Packet):
-    def __init__(self, packet=None):
-        tos.Packet.__init__(self,
-                            [('srcID', 'int', 2),
-                             ('seqNo', 'int', 4),
-                             ('type', 'int', 2),
-                             ('Data0', 'int', 2)],  # CO₂ 데이터 필드
-                            packet)
+    ```python
+    class OscilloscopeMsg(tos.Packet):
+        def __init__(self, packet=None):
+            tos.Packet.__init__(self,
+                                [('srcID', 'int', 2),
+                                 ('seqNo', 'int', 4),
+                                 ('type', 'int', 2),
+                                 ('Data0', 'int', 2)],  # CO₂ 데이터 필드
+                                packet)
 
 ### CO₂ 농도 계산
 - 센서로부터의 CO₂ 측정값은 아날로그 신호로 출력되며, 이를 디지털 값으로 변환하여 처리합니다. 이 변환 과정에서 사용된 계산식은 다음과 같습니다:
-```python
-CO2 = 1.5 * CO2 / 4096 * 2 * 1000  # 데이터 변환 (ppm)
+    ```python
+    CO2 = 1.5 * CO2 / 4096 * 2 * 1000  # 데이터 변환 (ppm)
 
 -계산식의 세부 요소:
     -원시 데이터 (CO2): 센서에서 측정된 CO₂ 농도의 원시 아날로그 신호를 ADC를 통해 변환한 디지털 값입니다.
@@ -59,35 +59,35 @@ CO2 = 1.5 * CO2 / 4096 * 2 * 1000  # 데이터 변환 (ppm)
 ### 음성 출력 (pyttsx3 모듈)
   - pyttsx3는 Python에서 작동하는 텍스트-투-스피치 변환 라이브러리로, CO₂ 농도가 임계값을 초과할 때 사용자에게 즉각적인 음성 경고를 제공합니다.
   - 이 모듈을 초기화하고, 음성 속도 및 언어 설정을 한국어로 조정하여 경고 메시지를 명확하게 전달합니다.
-  ```python
-     import pyttsx3
-     engine = pyttsx3.init()
-     engine.setProperty('rate', 200)        #음성 메시지의 속도를 설정합니다.(기본 속도 200)
-     engine.setProperty('voice', 'korean')  #출력될 음성 메시지의 언어를 한국어로 설정합니다.
+      ```python
+         import pyttsx3
+         engine = pyttsx3.init()
+         engine.setProperty('rate', 200)        #음성 메시지의 속도를 설정합니다.(기본 속도 200)
+         engine.setProperty('voice', 'korean')  #출력될 음성 메시지의 언어를 한국어로 설정합니다.
   
 
 ### 데이터 수신 및 경고
 - 구현: am.read() 함수를 사용하여 데이터 수신이 이루어집니다. 수신된 데이터는 OscilloscopeMsg 형태로 변환되어 CO₂ 농도를 분석합니다. CO₂ 농도가 설정된 임계값을 초과하면, engine.say() 함수를 사용하여 경고 메시지를 음성으로 출력합니다. 음성 출력은 engine.runAndWait()를 통해 실행됩니다.
   -`CO2_THRESHOLD`: 이 변수는 CO₂ 농도에 대한 임계값을 ppm 단위로 설정합니다. 기본값은 1000 ppm입니다. 환경에 따라 이 값을 조정하여 더 민감하거나 덜 민감한 경고를 설정할 수 있습니다.
-  ```python
-  try:
-    print("데이터 수신을 시작합니다...")
-    while True:
-        p = am.read()  # 패킷 읽기
-        if p:
-            msg = OscilloscopeMsg(p.data)
-            if msg.type == 1:  # CO2 데이터 타입 확인
-                CO2 = msg.Data0
-                CO2 = 1.5 * CO2 / 4096 * 2 * 1000  # 데이터 변환 (ppm 기준)
-                print(f"{datetime.datetime.now()} - CO2: {CO2:.2f} ppm")
-                if CO2 > CO2_THRESHOLD:
-                    print("경고: CO₂ 농도가 임계값을 초과했습니다! 즉시 환기가 필요합니다!")
-                    engine.say("이산화탄소 농도가 높습니다. 즉시 환기가 필요합니다.")
-                    engine.runAndWait()
-except KeyboardInterrupt:
-    print("프로그램이 종료되었습니다.")
-except Exception as e:
-    print(f"오류 발생: {e}")
+      ```python
+      try:
+        print("데이터 수신을 시작합니다...")
+        while True:
+            p = am.read()  # 패킷 읽기
+            if p:
+                msg = OscilloscopeMsg(p.data)
+                if msg.type == 1:  # CO2 데이터 타입 확인
+                    CO2 = msg.Data0
+                    CO2 = 1.5 * CO2 / 4096 * 2 * 1000  # 데이터 변환 (ppm 기준)
+                    print(f"{datetime.datetime.now()} - CO2: {CO2:.2f} ppm")
+                    if CO2 > CO2_THRESHOLD:
+                        print("경고: CO₂ 농도가 임계값을 초과했습니다! 즉시 환기가 필요합니다!")
+                        engine.say("이산화탄소 농도가 높습니다. 즉시 환기가 필요합니다.")
+                        engine.runAndWait()
+    except KeyboardInterrupt:
+        print("프로그램이 종료되었습니다.")
+    except Exception as e:
+        print(f"오류 발생: {e}")
 
 
 ## 🚀 실행 방법

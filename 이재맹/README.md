@@ -60,16 +60,26 @@
   - `engine.say()`: CO₂ 농도가 설정된 임계값을 초과하면, 이 함수를 사용하여 경고 메시지를 음성으로 출력합니다.
   - `engine.runAndWait()`: 음성 출력을 실행합니다.
   ```python
-  def read_sensor_data():
+  try:
     am = tos.AM()
+    print("데이터 수신을 시작합니다...")
     while True:
-        p = am.read()
+        p = am.read()  # 패킷 읽기
         if p:
             msg = OscilloscopeMsg(p.data)
-            co2_level = msg.Data0
-            print(f"{datetime.now()} - CO₂ Level: {co2_level} ppm")
-            if co2_level > CO2_THRESHOLD:
-                warn_high_co2(co2_level)
+            if msg.type == 1:  # CO2 데이터 타입 확인
+                CO2 = msg.Data0
+                CO2 = 1.5 * CO2 / 4096 * 2 * 1000  # 데이터 변환 (ppm 기준)
+                print(f"{datetime.datetime.now()} - CO2: {CO2:.2f} ppm")
+                if CO2 > CO2_THRESHOLD:
+                    print("경고: CO₂ 농도가 임계값을 초과했습니다! 즉시 환기가 필요합니다!")
+                    engine.say("이산화탄소 농도가 높습니다. 즉시 환기가 필요합니다.")
+                    engine.runAndWait()  # 음성 출력 실행
+  except KeyboardInterrupt:
+      print("프로그램이 종료되었습니다.")
+  except Exception as e:
+      print(f"오류 발생: {e}")
+
 
 ## 🚀 실행 방법
 

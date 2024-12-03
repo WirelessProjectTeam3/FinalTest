@@ -24,4 +24,5 @@
 
  
 ## 🖼️ 시스템 흐름도
-![dataflow.png](dataflow.png)
+
+![플로우차트 (1)](https://github.com/user-attachments/assets/4816a177-630e-44b7-b672-aa5dabf4f8e8)

@@ -90,11 +90,11 @@ pip install cmake
 ```
 ## 실행 결과 이미지
 초기 실행 이미지. 10초동안 EAR값을 누적하여 평균을 계산합니다.
-![open_eye](https://github.com/user-attachments/assets/715bab62-2cf2-4e98-bb45-5bcabc2ce67c)<br>
+<br>
 EAR 값이 연속적으로 일정 프레임 이상 지속되면 음성 및 시각적 경고를 출력합니다.
-![sleep_detect](https://github.com/user-attachments/assets/75a4d791-f05d-4675-9e11-b211598b13b5)
+
 ## 실행 결과 GIF
-![시연GIF.gif](%EC%8B%9C%EC%97%B0GIF.gif)
+
  
 
 

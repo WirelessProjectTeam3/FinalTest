@@ -21,9 +21,9 @@ load_dotenv()
 
 # 텔레그램 및 SMS 설정
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-SMS_API_KEY = "NCSCCGGEU7GMJBJH"
-SMS_API_SECRET = "QQXSK847HW1LEONHHWYFVA1J3QJQZVOX"
-SMS_FROM_PHONE_NUMBER = "01068659647"
+SMS_API_KEY = ""
+SMS_API_SECRET = ""
+SMS_FROM_PHONE_NUMBER = ""
 saved_phone_number = None  # set 명령으로 설정된 전화번호 저장
 
 # 시스템 전역 변수
